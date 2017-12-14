@@ -24,14 +24,15 @@ fs.readFile(file, 'utf8', (err, data) => {
 
 
 function getChecksum (data) {
-    const rows = data.split(/\n/);
+    const rows = data.trim().split(/\n/);
     let sum = 0;
     rows.forEach(row => {
-        sum += findRowDiff(row);
-    })
+        sum += findRowDiv(row);
+    });
     return sum;
 }
 
+// Part 1
 function findRowDiff (row) {
     const numbers = row.split(/\s+/);
     const max = Math.max(...numbers);
@@ -39,3 +40,19 @@ function findRowDiff (row) {
 
     return max-min;
 }
+
+// Part 2
+function findRowDiv (row) {
+    const numbers = row.split(/\s+/).sort((a,b) => b-a);
+
+    for(let i = 0 ; i < numbers.length ; i++){
+        for(let j = i+1; j < numbers.length ; j++){
+            const num1 = numbers[i];
+            const num2 = numbers[j];
+            if(num1 % num2 == 0){
+                return num1/num2;
+            }
+        }
+    }
+}
+
