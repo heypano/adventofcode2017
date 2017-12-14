@@ -1,20 +1,36 @@
 "use strict";
 
 if(!process || !process.argv || !process.argv[2]){
-    console.error("Advent of Code Day 1: Please provide the string to parse as the first argument when calling `node 1.js 123123`");
+    console.error("Advent of Code Day 1: Please provide the file to process `node 1.js ~/file.txt`");
     process.exit();
 }
 
-const input = process.argv[2];
-const inputArr = input.split("");
-const lastIndex = inputArr.length - 1;
-let sum = 0;
+const fs = require('fs');
+const file = process.argv[2];
 
-inputArr.forEach((e,i) => {
-   let e2 = (i === lastIndex) ? inputArr[0] : inputArr[i+1];
-   if(e === e2){
-     sum += +e;
-   }
-})
+fs.readFile(file, 'utf8', (err, input) => {
+    if (err) {
+        if (err.code === 'ENOENT') {
+            console.error(`${file} does not exist`);
+            return;
+        }
 
-console.log(`Sum: ${sum}`);
+        throw err;
+    }
+
+    const inputArr = input.split("");
+    const lastIndex = inputArr.length - 1;
+    const step = inputArr.length/2;
+    let sum = 0;
+
+    inputArr.forEach((e,i) => {
+       let i2 = (i + step) % (lastIndex + 1);
+       let e2 = inputArr[i2];
+       if(e === e2){
+         sum += +e;
+       }
+    })
+
+    console.log(`Sum: ${sum}`);
+});
+
